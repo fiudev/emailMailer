@@ -42,7 +42,7 @@ const Test = {
   calendar_url: "https://calendar.fiu.edu/department/onestop/calendar/xml"
 };
 
-const calendar = Test;
+const calendar = CEC;
 
 /**
  *
@@ -118,7 +118,12 @@ async function parseURL(calendar) {
   // console.log("Save the Date results: " + reindex);
 
   //console.log(getUnique(results, 'link'));
-  return getUnique(index, 'link')
+  //return getUnique(index, 'link')
+  return {
+    before: getUnique(index, 'link'),
+    after: getUnique(reindex, 'link')
+  }
+
 }
 
 function formatHTML(events, calendar) {
@@ -146,7 +151,7 @@ function formatHTML(events, calendar) {
               <mj-section background-color="#fafafa"> 
                   <mj-column width="600px">
       
-            ${events.map(
+            ${events.before.map(
               event =>
                 `
               <mj-section background-color="white">
@@ -176,6 +181,40 @@ function formatHTML(events, calendar) {
             </mj-section>  
         `
             )}
+            <mj-text font-size="20px" font-weight="500" color="#000" align="center">
+                  Save the Date
+              </mj-text>
+            ${events.after.map(
+              event =>
+                `
+              <mj-section background-color="white">
+              <mj-raw>
+                <!-- Left image -->
+              </mj-raw>
+              <mj-column align="center">
+                <mj-image width="200px" src=${
+                  event.media
+                } align="center" fluid-on-mobile="true"></mj-image>
+              </mj-column>
+              <mj-raw>
+
+                <!-- right paragraph -->
+              </mj-raw>
+              <mj-column>
+                <mj-text font-size="20px" font-weight="500" font-family="Helvetica Neue" color="#081D3F">
+                  ${event.title}
+                </mj-text>
+                <mj-text font-family="Helvetica Neue" color="#626262" font-size="14px" >${
+                  event.snippet
+                }...</mj-text>
+                <mj-text color="#081D3F"><a href=${event.link}>
+                Read more..</a></mj-text>
+            <mj-spacer height="5px" />
+              </mj-column>
+            </mj-section>  
+        `
+            )}
+
             <mj-spacer height="5px" />
             <mj-section background-color="#F8C93E">
               <mj-column>
