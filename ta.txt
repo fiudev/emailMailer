@@ -1,0 +1,11 @@
+`
+                    <mj-text font-size="20px" font-family="Helvetica Neue" font-weight="500" color="#081D3F">
+                        ${event.title}
+                    </mj-text>
+                    <mj-text font-size="14px" font-family="Helvetica Neue" color="#626262">
+                        ${event.snippet}...
+                    </mj-text>
+                    <mj-text color="#081D3F"><a href=${event.link}>
+                        Read more..</a></mj-text>
+                    <mj-spacer height="5px" />
+                `
