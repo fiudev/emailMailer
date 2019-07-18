@@ -105,11 +105,17 @@ async function parseURL(calendar) {
   }
   // Remove objects by date range
   index = results.filter(function (obj) {
-    return obj.date < nextweek;
+    return obj.date <= nextweek;
   });
-  console.log("2week date: " + nextweek);
-  console.log("Index: " + index);
-  console.log("Results: " + results);
+
+  // Save the Date: Remove objects by date range
+  reindex = results.filter(function (obj) {
+    return obj.date > nextweek;
+  });
+
+  // console.log("2week date: " + nextweek);
+  //console.log("Index: " + index);
+  // console.log("Save the Date results: " + reindex);
 
   //console.log(getUnique(results, 'link'));
   return getUnique(index, 'link')
