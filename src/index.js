@@ -3,6 +3,11 @@ const Parser = require("rss-parser");
 const mjml = require("mjml");
 const nodemailer = require("nodemailer");
 const moment = require("moment");
+const GoogleSpreadsheet = require('google-spreadsheet');
+const {
+  promisify
+} = require('util');
+const credentials = require(`../service-account.json`);
 const {
   BitlyClient
 } = require("bitly");
@@ -125,6 +130,21 @@ async function parseURL(calendar) {
   }
 }
 
+// Google Spreadsheet
+const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
+async function accessSpreadsheet() {
+  const doc = new GoogleSpreadsheet(SPREADSHEET_ID)
+  await promisify(doc.useServiceAccountAuth)(credentials)
+  const info = await promisify(doc.getInfo)()
+  console.log(`Loaded doc: ` + info.title + ` by ` + info.author.email);
+  doc.getRows(1, function (err, rows) {
+    console.log(`Get All Rows: ` + rows);
+  });
+}
+
+accessSpreadsheet()
+
+// Using MJML to format HTML Email
 function formatHTML(events, calendar) {
   const {
     html
