@@ -123,7 +123,6 @@ async function parseURL(calendar) {
     before: getUnique(index, 'link'),
     after: getUnique(reindex, 'link')
   }
-
 }
 
 function formatHTML(events, calendar) {

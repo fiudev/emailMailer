@@ -7,12 +7,13 @@
     "start": "node src/index.js"
   },
   "dependencies": {
-    "bitly": "^6.0.8",
+    "bitly": "^6.1.0",
     "dotenv": "^8.0.0",
-    "mjml": "^4.4.0-beta.1",
+    "google-spreadsheet": "^2.0.7",
+    "mjml": "^4.4.0",
     "moment": "^2.24.0",
-    "nodemailer": "^6.1.1",
-    "rss-parser": "^3.7.0"
+    "nodemailer": "^6.3.0",
+    "rss-parser": "^3.7.2"
   },
   "author": "jFeliWeb",
   "description": ""
