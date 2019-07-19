@@ -35,7 +35,7 @@ const SCIS = {
 };
 const CEC = {
   title: "College of Engineering",
-  cover: "https://www.cis.fiu.edu/wp-content/uploads/2019/07/CEC-Email-Newsletter-header.png",
+  cover: "https://www.cis.fiu.edu/wp-content/uploads/2019/07/1-update-CEC-Email-Newsletter-header-min.jpg",
   link: "https://cec.fiu.edu/",
   calendar_url: "https://calendar.fiu.edu/department/cec/calendar/xml"
 };
@@ -192,7 +192,6 @@ function formatHTML(events, calendar) {
               <mj-divider border-color="#081E3F" border-style="solid" border-width="1px" padding-left="100px" padding-right="100px" padding-bottom="5px" padding-top="5px"></mj-divider>
               `
               )}
-             
             <mj-section background-color="#081D3F">
             <mj-text font-size="22px" font-weight="500" color="#fff" align="center">
                   Save the Date
@@ -245,11 +244,8 @@ function formatHTML(events, calendar) {
 
 async function mail(html) {
   const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: email,
-      pass: password
-    }
+    host: "smtpout.fiu.edu",
+    port: 25,
   });
 
   await transporter.sendMail({
@@ -257,6 +253,14 @@ async function mail(html) {
     to: process.env.TO_EMAIL,
     subject: "FIUCEC Events Newsletter",
     html
+  });
+
+  transporter.verify(function (error, success) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Server is ready to take our messages");
+    }
   });
 }
 
