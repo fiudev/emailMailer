@@ -35,7 +35,7 @@ const SCIS = {
 };
 const CEC = {
   title: "College of Engineering",
-  cover: "http://news.fiu.edu/wp-content/uploads/FIU-campus-2016-000px.jpg",
+  cover: "https://www.cis.fiu.edu/wp-content/uploads/2019/07/CEC-Email-Newsletter-header.png",
   link: "https://cec.fiu.edu/",
   calendar_url: "https://calendar.fiu.edu/department/cec/calendar/xml"
 };
@@ -131,18 +131,18 @@ async function parseURL(calendar) {
 }
 
 // Google Spreadsheet
-const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
-async function accessSpreadsheet() {
-  const doc = new GoogleSpreadsheet(SPREADSHEET_ID)
-  await promisify(doc.useServiceAccountAuth)(credentials)
-  const info = await promisify(doc.getInfo)()
-  console.log(`Loaded doc: ` + info.title + ` by ` + info.author.email);
-  doc.getRows(1, function (err, rows) {
-    console.log(`Get All Rows: ` + rows);
-  });
-}
+// const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
+// async function accessSpreadsheet() {
+//   const doc = new GoogleSpreadsheet(SPREADSHEET_ID)
+//   await promisify(doc.useServiceAccountAuth)(credentials)
+//   const info = await promisify(doc.getInfo)()
+//   console.log(`Loaded doc: ` + info.title + ` by ` + info.author.email);
+//   doc.getRows(1, function (err, rows) {
+//     console.log(`Get All Rows: ` + rows);
+//   });
+// }
 
-accessSpreadsheet()
+// accessSpreadsheet()
 
 // Using MJML to format HTML Email
 function formatHTML(events, calendar) {
@@ -152,88 +152,69 @@ function formatHTML(events, calendar) {
     `
   <mjml>
     <mj-body width="700px">
-        <mj-section background-color="#081D3F">
-            <mj-column>
-                <mj-text font-size="20px" font-weight="500" color="#FFF" align="center">
-                    ${calendar.title}
-                </mj-text>
-            </mj-column>
+       
+        <mj-section>
+          <mj-column width="100%">
+            <mj-image src=${calendar.cover} alt="header image" fluid-on-mobile="true" padding="0px"></mj-image>
+          </mj-column>
         </mj-section>
-            <mj-section background-url=${calendar.cover} 
-                background-size="cover" background-repeat="no-repeat">
-            <mj-column width="600px">
-                <mj-text align="center" color="#fff" font-size="40px" font-family="Helvetica Neue" font-weight="600">Upcoming Events</mj-text>
-                <mj-button background-color="#F8C93D" href=${calendar.link}>
-                    Learn more</mj-button>
-            </mj-column>
-            </mj-section>
-              <mj-section background-color="#fafafa"> 
-                  <mj-column width="600px">
-      
+
+        <mj-section background-color="#fafafa"> 
+          <mj-column width="600px" background-color="#FFF">
+            
             ${events.before.map(
               event =>
-                `
-              <mj-section background-color="white">
-              <mj-raw>
-                <!-- Left image -->
-              </mj-raw>
-              <mj-column align="center">
-                <mj-image width="200px" src=${
-                  event.media
-                } align="center" fluid-on-mobile="true"></mj-image>
-              </mj-column>
-              <mj-raw>
-
-                <!-- right paragraph -->
-              </mj-raw>
-              <mj-column>
-                <mj-text font-size="20px" font-weight="500" font-family="Helvetica Neue" color="#081D3F">
-                  ${event.title}
-                </mj-text>
-                <mj-text font-family="Helvetica Neue" color="#626262" font-size="14px" >${
-                  event.snippet
-                }...</mj-text>
-                <mj-text color="#081D3F"><a href=${event.link}>
-                Read more..</a></mj-text>
-            <mj-spacer height="5px" />
-              </mj-column>
-            </mj-section>  
-        `
-            )}
-            <mj-text font-size="20px" font-weight="500" color="#000" align="center">
+              `
+              <mj-section>
+                <mj-raw>
+                  <!-- Left image -->
+                </mj-raw>
+                <mj-column align="center">
+                  <mj-image width="200px" src=${
+                    event.media
+                  } align="center" fluid-on-mobile="true"></mj-image>
+                </mj-column>
+                <mj-raw>
+                  <!-- right paragraph -->
+                </mj-raw>
+                <mj-column>
+                  <mj-text font-size="20px" font-weight="500" font-family="Helvetica Neue" color="#081D3F">
+                    ${event.title}
+                  </mj-text>
+                  <mj-text font-family="Helvetica Neue" color="#626262" font-size="14px" >${
+                    event.snippet
+                  }...</mj-text>
+                  <mj-text color="#081D3F"><a href=${event.link}>
+                  Read more..</a></mj-text>
+              <mj-spacer height="5px" />
+                </mj-column>
+              </mj-section>
+              <mj-divider border-color="#081E3F" border-style="solid" border-width="1px" padding-left="100px" padding-right="100px" padding-bottom="5px" padding-top="5px"></mj-divider>
+              `
+              )}
+             
+            <mj-section background-color="#081D3F">
+            <mj-text font-size="22px" font-weight="500" color="#fff" align="center">
                   Save the Date
               </mj-text>
+            </mj-section> 
             ${events.after.map(
               event =>
                 `
-              <mj-section background-color="white">
-              <mj-raw>
-                <!-- Left image -->
-              </mj-raw>
-              <mj-column align="center">
-                <mj-image width="200px" src=${
-                  event.media
-                } align="center" fluid-on-mobile="true"></mj-image>
-              </mj-column>
-              <mj-raw>
-
-                <!-- right paragraph -->
-              </mj-raw>
-              <mj-column>
-                <mj-text font-size="20px" font-weight="500" font-family="Helvetica Neue" color="#081D3F">
-                  ${event.title}
-                </mj-text>
-                <mj-text font-family="Helvetica Neue" color="#626262" font-size="14px" >${
-                  event.snippet
-                }...</mj-text>
-                <mj-text color="#081D3F"><a href=${event.link}>
-                Read more..</a></mj-text>
-            <mj-spacer height="5px" />
-              </mj-column>
+            <mj-section background-color="white">
+            <mj-raw>
+              <!-- right paragraph -->
+            </mj-raw>
+            <mj-column align="center">
+              <mj-text font-size="16px" font-weight="500" font-family="Helvetica Neue" color="#081D3F">
+                <a href=${event.link}> ${event.title} </a>
+              </mj-text>
+              <mj-spacer height="5px" />
+            </mj-column>
             </mj-section>  
         `
             )}
-
+            <!-- Google Spreadsheet - Special Events
             <mj-spacer height="5px" />
             <mj-section background-color="#F8C93E">
               <mj-column>
@@ -245,7 +226,12 @@ function formatHTML(events, calendar) {
               <mj-text color="#081D3F" font-size="16px">Dec. 4th - <a href="https://calendar.fiu.edu/event/nodus_ensembles_fall_concert_series_7243#.XSZR7pNKjUI">NODUS Ensemble’s Fall Concert Series</a></mj-text>
               </mj-column>
             </mj-section>
+              -->
 
+              <!-- Copy Right -->
+              <mj-text font-size="14px" font-weight="200" color="#000" align="center">
+              Copyright © 2019, FIU College of Engineering & Computing, All rights reserved.
+              </mj-text>
             <mj-column>
     </mj-body>
   </mjml>
