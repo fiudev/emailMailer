@@ -10,8 +10,8 @@ const {
 
 const bitly = new BitlyClient(process.env.BITLY_API, {});
 
-const email = process.env.GMAIL_EMAIL;
-const password = process.env.GMAIL_PASSWORD;
+const email = process.env.MAIL_EMAIL;
+const password = process.env.MAIL_PASSWORD;
 
 const parser = new Parser({
   customFields: {
