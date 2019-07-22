@@ -200,8 +200,8 @@ function formatHTML(events, calendar) {
             <mj-raw>
               <!-- right paragraph -->
             </mj-raw>
-            <mj-column align="center">
-              <mj-text font-size="16px" font-weight="500" font-family="Helvetica Neue" color="#081D3F">
+            <mj-column>
+              <mj-text align="center" font-size="16px" font-weight="500" font-family="Helvetica Neue" color="#081D3F">
                 <a href=${event.link}> ${event.title} </a>
               </mj-text>
               <mj-spacer height="5px" />
