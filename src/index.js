@@ -226,7 +226,7 @@ function formatHTML(events, calendar) {
 
 async function mail(html) {
   const transporter = nodemailer.createTransport({
-    host: "smtpout.fiu.edu",
+    host: "smtp.cs.fiu.edu",
     port: 25,
   });
 
