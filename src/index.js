@@ -3,15 +3,9 @@ const Parser = require("rss-parser");
 const mjml = require("mjml");
 const nodemailer = require("nodemailer");
 const moment = require("moment");
-const credentials = require(`../service-account.json`);
-const {
-  BitlyClient
-} = require("bitly");
 
-const bitly = new BitlyClient(process.env.BITLY_API, {});
-
-const email = process.env.GMAIL_EMAIL;
-const password = process.env.GMAIL_PASSWORD;
+const email = process.env.MAIL_EMAIL;
+const password = process.env.MAIL_PASSWORD;
 
 const parser = new Parser({
   customFields: {
@@ -72,10 +66,8 @@ async function parseURL(calendar) {
       link
     } = event;
     const datetime = new Date(date);
-    //const {url} = await bitly.shorten(link);
-    const media = event["media:content"][0]["$"].url;
 
-    // console.log("List Event for 2 weeks: " + event);
+    const media = event["media:content"][0]["$"].url;
 
     let snippet = contentSnippet
       .replace(/(<([^>]+)>)/gi, "")
@@ -114,31 +106,11 @@ async function parseURL(calendar) {
     return obj.date > nextweek;
   });
 
-  // console.log("2week date: " + nextweek);
-  //console.log("Index: " + index);
-  // console.log("Save the Date results: " + reindex);
-
-  //console.log(getUnique(results, 'link'));
-  //return getUnique(index, 'link')
   return {
     before: getUnique(index, 'link'),
     after: getUnique(reindex, 'link')
   }
 }
-
-// Google Spreadsheet
-// const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
-// async function accessSpreadsheet() {
-//   const doc = new GoogleSpreadsheet(SPREADSHEET_ID)
-//   await promisify(doc.useServiceAccountAuth)(credentials)
-//   const info = await promisify(doc.getInfo)()
-//   console.log(`Loaded doc: ` + info.title + ` by ` + info.author.email);
-//   doc.getRows(1, function (err, rows) {
-//     console.log(`Get All Rows: ` + rows);
-//   });
-// }
-
-// accessSpreadsheet()
 
 // Using MJML to format HTML Email
 function formatHTML(events, calendar) {
@@ -228,6 +200,8 @@ async function mail(html) {
   const transporter = nodemailer.createTransport({
     host: "smtpout.fiu.edu",
     port: 25,
+    secure: false,
+    ignoreTLS: true
   });
 
   await transporter.sendMail({
