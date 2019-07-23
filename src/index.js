@@ -3,6 +3,10 @@ const Parser = require("rss-parser");
 const mjml = require("mjml");
 const nodemailer = require("nodemailer");
 const moment = require("moment");
+const GoogleSpreadsheet = require('google-spreadsheet');
+const {
+  promisify
+} = require('util');
 const credentials = require(`../service-account.json`);
 const {
   BitlyClient
@@ -127,18 +131,18 @@ async function parseURL(calendar) {
 }
 
 // Google Spreadsheet
-// const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
-// async function accessSpreadsheet() {
-//   const doc = new GoogleSpreadsheet(SPREADSHEET_ID)
-//   await promisify(doc.useServiceAccountAuth)(credentials)
-//   const info = await promisify(doc.getInfo)()
-//   console.log(`Loaded doc: ` + info.title + ` by ` + info.author.email);
-//   doc.getRows(1, function (err, rows) {
-//     console.log(`Get All Rows: ` + rows);
-//   });
-// }
+const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
+async function accessSpreadsheet() {
+  const doc = new GoogleSpreadsheet(SPREADSHEET_ID)
+  await promisify(doc.useServiceAccountAuth)(credentials)
+  const info = await promisify(doc.getInfo)()
+  console.log(`Loaded doc: ` + info.title + ` by ` + info.author.email);
+  doc.getRows(1, function (err, rows) {
+    console.log(`Get All Rows: ` + rows);
+  });
+}
 
-// accessSpreadsheet()
+accessSpreadsheet()
 
 // Using MJML to format HTML Email
 function formatHTML(events, calendar) {
@@ -209,6 +213,20 @@ function formatHTML(events, calendar) {
             </mj-section>  
         `
             )}
+
+            <!-- Google Spreadsheet | Special Events	-->
+            <mj-spacer height="5px" />	
+            <mj-section background-color="#F8C93E">	
+              <mj-column>	
+              <mj-text font-size="20px" font-weight="500" color="#000" align="center">	
+                  Special Events	
+              </mj-text>	
+              <mj-text color="#081D3F" font-size="16px">July 11th - <a href="https://calendar.fiu.edu/event/concrete_in_the_garden#.XSZQ9ZNKjUI">Concrete in the Garden</a></mj-text>	
+              <mj-text color="#081D3F" font-size="16px">Sept. 16th - <a href="https://calendar.fiu.edu/event/exhibition_david_chang_landscapes#.XSZQ65NKjUI">Exhibition: David Chang Landscapes</a></mj-text>	
+              <mj-text color="#081D3F" font-size="16px">Dec. 4th - <a href="https://calendar.fiu.edu/event/nodus_ensembles_fall_concert_series_7243#.XSZR7pNKjUI">NODUS Ensemble’s Fall Concert Series</a></mj-text>	
+              </mj-column>	
+            </mj-section>
+
               <!-- Copy Right -->
               <mj-text font-size="14px" font-weight="200" color="#000" align="center">
               Copyright © 2019, FIU College of Engineering & Computing, All rights reserved.
@@ -226,7 +244,7 @@ function formatHTML(events, calendar) {
 
 async function mail(html) {
   const transporter = nodemailer.createTransport({
-    host: "smtpout.fiu.edu",
+    host: "smtp.cs.fiu.edu",
     port: 25,
   });
 
