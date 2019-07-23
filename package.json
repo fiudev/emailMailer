@@ -19,5 +19,13 @@
     "rss-parser": "^3.7.2"
   },
   "author": "jFeliWeb",
-  "description": ""
+  "description": "Use to pull RSS Calender Feed to a newsletter email format",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiudev/emailMailer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fiudev/emailMailer/issues"
+  },
+  "homepage": "https://github.com/fiudev/emailMailer#readme"
 }
