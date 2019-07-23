@@ -143,6 +143,7 @@ async function accessSpreadsheet() {
 }
 
 accessSpreadsheet()
+console.log(accessSpreadsheet());
 
 // Using MJML to format HTML Email
 function formatHTML(events, calendar) {
