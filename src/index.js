@@ -4,11 +4,28 @@ const mjml = require("mjml");
 const nodemailer = require("nodemailer");
 const moment = require("moment");
 const credentials = require(`../service-account.json`);
+const cron = require('node-cron');
 const {
   BitlyClient
 } = require("bitly");
 
 const bitly = new BitlyClient(process.env.BITLY_API, {});
+
+// Cron Job
+cron.schedule('0 15 * * Thursday', () => {
+  let shell = require('../child_helper');
+
+  let commandList = [
+    "npm start"
+  ]
+
+  shell.series(commandList, function(err){
+    console.log('Running Every Thursday at 1pm');
+  });
+}, {
+  scheduled: true,
+  timezone: "America/New_York"
+});
 
 const email = process.env.MAIL_EMAIL;
 const password = process.env.MAIL_PASSWORD;
