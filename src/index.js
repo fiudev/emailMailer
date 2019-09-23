@@ -3,6 +3,7 @@ const Parser = require("rss-parser");
 const mjml = require("mjml");
 const nodemailer = require("nodemailer");
 const moment = require("moment");
+
 const GoogleSpreadsheet = require('google-spreadsheet');
 const {
   promisify
@@ -94,10 +95,8 @@ async function parseURL(calendar) {
       link
     } = event;
     const datetime = new Date(date);
-    //const {url} = await bitly.shorten(link);
-    const media = event["media:content"][0]["$"].url;
 
-    // console.log("List Event for 2 weeks: " + event);
+    const media = event["media:content"][0]["$"].url;
 
     let snippet = contentSnippet
       .replace(/(<([^>]+)>)/gi, "")
@@ -136,12 +135,6 @@ async function parseURL(calendar) {
     return obj.date > nextweek;
   });
 
-  // console.log("2week date: " + nextweek);
-  //console.log("Index: " + index);
-  // console.log("Save the Date results: " + reindex);
-
-  //console.log(getUnique(results, 'link'));
-  //return getUnique(index, 'link')
   return {
     before: getUnique(index, 'link'),
     after: getUnique(reindex, 'link')
@@ -329,6 +322,8 @@ async function mail(html) {
   const transporter = nodemailer.createTransport({
     host: "smtp.cs.fiu.edu",
     port: 25,
+    secure: false,
+    ignoreTLS: true
   });
 
   await transporter.sendMail({
