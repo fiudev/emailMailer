@@ -8,11 +8,28 @@ const {
   promisify
 } = require('util');
 const credentials = require(`../service-account.json`);
+const cron = require('node-cron');
 const {
   BitlyClient
 } = require("bitly");
 
 const bitly = new BitlyClient(process.env.BITLY_API, {});
+
+// Cron Job
+cron.schedule('0 15 * * Thursday', () => {
+  let shell = require('../child_helper');
+
+  let commandList = [
+    "npm start"
+  ]
+
+  shell.series(commandList, function(err){
+    console.log('Running Every Thursday at 1pm');
+  });
+}, {
+  scheduled: true,
+  timezone: "America/New_York"
+});
 
 const email = process.env.MAIL_EMAIL;
 const password = process.env.MAIL_PASSWORD;
@@ -29,9 +46,10 @@ const parser = new Parser({
 
 const SCIS = {
   title: "School of Computing and Information Sciences",
-  cover: "https://parking.fiu.edu/wp-content/uploads/2018/04/pg6cornershot.jpg",
+  cover: "https://www.cis.fiu.edu/wp-content/uploads/2019/09/scis-newsletter-cover-09192019.png",
   link: "https://www.cis.fiu.edu/events",
-  calendar_url: "https://calendar.fiu.edu/department/computing_information_sciences/calendar/xml"
+  calendar_url: "https://calendar.fiu.edu/department/computing_information_sciences/calendar/xml",
+  date: moment().format('dddd, MMMM Do YYYY')
 };
 const CEC = {
   title: "College of Engineering",
@@ -47,7 +65,7 @@ const Test = {
   calendar_url: "https://calendar.fiu.edu/department/onestop/calendar/xml"
 };
 
-const calendar = CEC;
+const calendar = SCIS;
 
 /**
  *
@@ -160,6 +178,12 @@ function formatHTML(events, calendar) {
           </mj-column>
         </mj-section>
 
+        <mj-section background-color='#fff'>
+	  <mj-column>
+	    <mj-text align="center" font-size="21px" font-weight="500" color="#030303" padding="0 15px">${calendar.date}</mj-text>
+	  </mj-column>
+        </mj-section>
+
         <mj-section background-color="#fafafa"> 
           <mj-column width="600px" background-color="#FFF">
             
@@ -187,7 +211,7 @@ function formatHTML(events, calendar) {
                   }...</mj-text>
                   <mj-text color="#081D3F"><a href=${event.link}>
                   Read more..</a></mj-text>
-              <mj-spacer height="5px" />
+              <mj-spacer height="0px" />
                 </mj-column>
               </mj-section>
               <mj-divider border-color="#081E3F" border-style="solid" border-width="1px" padding-left="100px" padding-right="100px" padding-bottom="5px" padding-top="5px"></mj-divider>
@@ -197,42 +221,100 @@ function formatHTML(events, calendar) {
             <mj-text font-size="22px" font-weight="500" color="#fff" align="center">
                   Save the Date
               </mj-text>
-            </mj-section> 
+            </mj-section>
+
+	     <mj-raw>
+              <ul>
+             </mj-raw>	   
             ${events.after.map(
               event =>
                 `
-            <mj-section background-color="white">
-            <mj-raw>
-              <!-- right paragraph -->
-            </mj-raw>
-            <mj-column>
-              <mj-text align="center" font-size="16px" font-weight="500" font-family="Helvetica Neue" color="#081D3F">
-                <a href=${event.link}> ${event.title} </a>
+              <mj-text align="center" font-size="15px" font-weight="500" font-family="Helvetica Neue" color="#081D3F">
+               <li> <a href=${event.link}> ${event.title} </a></li>
               </mj-text>
-              <mj-spacer height="5px" />
-            </mj-column>
-            </mj-section>  
-        `
+		<mj-spacer height="2px" />
+            `
             )}
+	  <mj-raw>
+      	   </ul>
+    	  </mj-raw>
+	   
+	  <mj-section background-color="#081D3F">
+	  	<mj-text font-size="22px" font-weight="500" color="#fff" align="center">
+                	Career Path
+          	</mj-text>
+	  </mj-section>
+		<mj-text font-size="15px" font-weight="600" color="#000" align="center">
+			<a href="https://careerpath.cis.fiu.edu/job/kleiner-perkins-fellows-8-kp-fellows-program-product-design-engineering/">KP Fellows Program (Product, Design, Engineering)</a>
+		</mj-text>
+		<mj-text font-size="14px" color="#000">
+			The KP Fellows Program is a unique, career-defining opportunity for technical students who are interested in pursuing technology, entrepreneurship, design, and startups. Engineering and Design Fellows work with one of our company partners over the summer where they develop and hone their technical skills and are mentored by an executive within the company. Product Fellows will spend a full year working with one of our company partners.
+		</mj-text>
+		<mj-text>
+			<a href="https://careerpath.cis.fiu.edu/job/kleiner-perkins-fellows-8-kp-fellows-program-product-design-engineering/">Learn More...</a>
+		</mj-text>
+			<mj-spacer height="2px" />
+		<mj-divider border-color="#F8C93E"></mj-divider>
+		<mj-text font-size="15px" font-weight="600" color="#000" align="center">
+                        <a href="https://careerpath.cis.fiu.edu/job/fiu-panthersoft-fiu-miami-fl-7-erp-application-developer-i/">ERP Application Developer I</a>
+                </mj-text>
+                <mj-text font-size="14px" color="#000">
+                        Entry level developer position at PantherSoft (FIU). This is a full-time position with benefits and tuition waiver for recent graduates of CS/IT with programming experience. Work with Oracle ERP PeopleSoft systems, FIU Mobile, Business Intelligence, Integration platforms, chatbots, and other enterprise systems.
+                </mj-text>
+                <mj-text>
+                        <a href="https://careerpath.cis.fiu.edu/job/fiu-panthersoft-fiu-miami-fl-7-erp-application-developer-i/">Learn More...</a>
+                </mj-text>
+                        <mj-spacer height="2px" />
+                <mj-divider border-color="#F8C93E"></mj-divider>
+		<mj-text font-size="15px" font-weight="600" color="#000" align="center">
+                        <a href="https://careerpath.cis.fiu.edu/job/gensco-pharma-doral-6-paid-it-internship/">Paid IT Internship</a>
+                </mj-text>
+                <mj-text font-size="14px" color="#000">
+                        Gensco Pharma is currently looking to hire a paid intern to work out of our Doral, FL office location. Must be enrolled as junior, senior, or graduate student in: information technology, computer science,  software development, Internet of Things, computer engineering, management information science, health informatics, or related degree.
+                </mj-text>
+                <mj-text>
+                        <a href="https://careerpath.cis.fiu.edu/job/gensco-pharma-doral-6-paid-it-internship/">Learn More...</a>
+                </mj-text>
+                        <mj-spacer height="2px" />
+                <mj-divider border-color="#F8C93E"></mj-divider>
+		<mj-text font-size="15px" font-weight="600" color="#000" align="center">
+                        <a href="https://careerpath.cis.fiu.edu/job/daasly-inc-hialeah-fl-7-entry-level-sql-developer/">Entry Level SQL Developer</a>
+                </mj-text>
+                <mj-text font-size="14px" color="#000">
+                        We are seeking an Entry Level SQL Developer to become part of our team! You will train directly with the company co-founders who have nearly a decade of experience in their field. Experience with databases, such as MySQL, SQL Server, AWS Redshift, Google Cloud Big Query.
+                </mj-text>
+                <mj-text>
+                        <a href="https://careerpath.cis.fiu.edu/job/daasly-inc-hialeah-fl-7-entry-level-sql-developer/">Learn More...</a>
+                </mj-text>
+                        <mj-spacer height="2px" />
+                <mj-divider border-color="#F8C93E"></mj-divider>
+		<mj-text font-size="15px" font-weight="600" color="#000" align="center">
+                        <a href="https://careerpath.cis.fiu.edu/job/the-ultimate-software-group-inc-1760-bell-tower-lane-weston-florida-33326-7-software-test-engineer/">Software Test Engineer</a>
+                </mj-text>
+                <mj-text font-size="14px" color="#000">
+                        Software Test Engineer needed at Ultimate Software in Weston, Florida. Work proactively with members of project team to find and fix software defects.  Communicate with product owner in creating acceptance tests.  Write automated tests at the unit, services, integration and UI layers.
+                </mj-text>
+                <mj-text>
+                        <a href="https://careerpath.cis.fiu.edu/job/the-ultimate-software-group-inc-1760-bell-tower-lane-weston-florida-33326-7-software-test-engineer/">Learn More...</a>
+                </mj-text>
+         </mj-section>
 
-            <!-- Google Spreadsheet | Special Events	-->
-            <mj-spacer height="5px" />	
-            <mj-section background-color="#F8C93E">	
-              <mj-column>	
-              <mj-text font-size="20px" font-weight="500" color="#000" align="center">	
-                  Special Events	
-              </mj-text>	
-              <mj-text color="#081D3F" font-size="16px">July 11th - <a href="https://calendar.fiu.edu/event/concrete_in_the_garden#.XSZQ9ZNKjUI">Concrete in the Garden</a></mj-text>	
-              <mj-text color="#081D3F" font-size="16px">Sept. 16th - <a href="https://calendar.fiu.edu/event/exhibition_david_chang_landscapes#.XSZQ65NKjUI">Exhibition: David Chang Landscapes</a></mj-text>	
-              <mj-text color="#081D3F" font-size="16px">Dec. 4th - <a href="https://calendar.fiu.edu/event/nodus_ensembles_fall_concert_series_7243#.XSZR7pNKjUI">NODUS Ensemble’s Fall Concert Series</a></mj-text>	
-              </mj-column>	
+           <mj-section background-color="#fff">
+              <mj-text align="center" font-size="15px" font-weight="300" font-family="Helvetica Neue" color="#000">
+               Do you want to add your events and activities to this newsletter? <a href="http://bit.ly/FIU-Create-Event">Click here </a>to submit now!
+              </mj-text>
+
             </mj-section>
 
               <!-- Copy Right -->
-              <mj-text font-size="14px" font-weight="200" color="#000" align="center">
-              Copyright © 2019, FIU College of Engineering & Computing, All rights reserved.
+	    <mj-section background-color="#fff"> 
+              <mj-text font-size="12px" font-weight="200" color="#000" align="center">
+              Copyright © 2019, FIU School of Computing and Information Sciences, All rights reserved.
               </mj-text>
-            <mj-column>
+            </mj-section>
+	<mj-raw>
+		<img src="https://www.google-analytics.com/collect?v=1&tid=UA-72593959-1&cid=555&aip=1&t=event&ec=email&ea=open&dp=%2Femail%2Fnewsletter&dt=fiuwsn09192019">
+	</mj-raw>
     </mj-body>
   </mjml>
 `, {
@@ -252,7 +334,7 @@ async function mail(html) {
   await transporter.sendMail({
     from: email,
     to: process.env.TO_EMAIL,
-    subject: "FIUCEC Events Newsletter",
+    subject: "FIUSCIS Events Newsletter",
     html
   });
 
