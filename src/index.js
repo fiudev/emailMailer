@@ -3,6 +3,10 @@ const Parser = require("rss-parser");
 const mjml = require("mjml");
 const nodemailer = require("nodemailer");
 const moment = require("moment");
+const GoogleSpreadsheet = require('google-spreadsheet');
+const {
+  promisify
+} = require('util');
 const credentials = require(`../service-account.json`);
 const cron = require('node-cron');
 const {
@@ -145,18 +149,19 @@ async function parseURL(calendar) {
 }
 
 // Google Spreadsheet
-// const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
-// async function accessSpreadsheet() {
-//   const doc = new GoogleSpreadsheet(SPREADSHEET_ID)
-//   await promisify(doc.useServiceAccountAuth)(credentials)
-//   const info = await promisify(doc.getInfo)()
-//   console.log(`Loaded doc: ` + info.title + ` by ` + info.author.email);
-//   doc.getRows(1, function (err, rows) {
-//     console.log(`Get All Rows: ` + rows);
-//   });
-// }
+const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
+async function accessSpreadsheet() {
+  const doc = new GoogleSpreadsheet(SPREADSHEET_ID)
+  await promisify(doc.useServiceAccountAuth)(credentials)
+  const info = await promisify(doc.getInfo)()
+  console.log(`Loaded doc: ` + info.title + ` by ` + info.author.email);
+  doc.getRows(1, function (err, rows) {
+    console.log(`Get All Rows: ` + rows);
+  });
+}
 
-// accessSpreadsheet()
+accessSpreadsheet()
+console.log(accessSpreadsheet());
 
 // Using MJML to format HTML Email
 function formatHTML(events, calendar) {
@@ -298,6 +303,7 @@ function formatHTML(events, calendar) {
               <mj-text align="center" font-size="15px" font-weight="300" font-family="Helvetica Neue" color="#000">
                Do you want to add your events and activities to this newsletter? <a href="http://bit.ly/FIU-Create-Event">Click here </a>to submit now!
               </mj-text>
+
             </mj-section>
 
               <!-- Copy Right -->
