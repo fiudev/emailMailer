@@ -14,7 +14,7 @@
     "lodash.merge": "^4.6.2",
     "mem": "^5.1.1",
     "mjml": "^4.4.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "node-cron": "^2.0.3",
     "nodemailer": "^6.3.0",
     "rss-parser": "^3.7.2"
